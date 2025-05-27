@@ -52,6 +52,12 @@ def predict():
     min_value = predictions.min()
     mean_value = predictions.mean()
     
+    # Add units for E8 grid predictions
+    if prediction_type == 'egrid':
+        max_value = f"{max_value:.2f} KWh/day"
+        min_value = f"{min_value:.2f} KWh/day"
+        mean_value = f"{mean_value:.2f} KWh/day"
+    
     # Get dates for max and min values
     if "Date" in df.columns:
         max_date = df.loc[predictions.argmax(), "Date"]
@@ -104,7 +110,7 @@ def predict():
         updatemenus=[dict(
             type="buttons",
             buttons=[
-                dict(label="Play",
+                dict(label="Fast forward",
                      method="animate",
                      args=[None, {"frame": {"duration": 50, "redraw": True},
                                   "mode": "immediate"}]),
@@ -140,9 +146,9 @@ def predict():
     return render_template("result.html", 
                          plot=graph_html, 
                          prediction_type=y_label,
-                         max_value=f"{max_value:.2f}",
-                         min_value=f"{min_value:.2f}",
-                         mean_value=f"{mean_value:.2f}",
+                         max_value=max_value,
+                         min_value=min_value,
+                         mean_value=mean_value,
                          max_date=max_date,
                          min_date=min_date,
                          line_color=line_color,
